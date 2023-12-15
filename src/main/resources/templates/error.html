@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Erreur</title>
+</head>
+<body>
+
+
+<header>
+    <h1>La filmothèque</h1>
+
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+        <div class="button"><a th:href="@{/login}">Se connecter </a></div>
+    </div>
+    <div class="user-info" th:if="${#authorization.expression('isAuthenticated()')}">
+        Vous êtes connecté en tant que <span th:text="${#authentication.name}"></span>
+        <div class="button"><a th:href="@{/logout}">Se déconnecter</a></div>
+    </div>
+</header>
+
+
+<nav>
+    <a href="/catalogFilms">Acceuil</a>
+    <a sec:authorize="isAuthenticated()" href="/nouveauFilmForm">Ajouter un film</a>
+    <a href="#">S'inscrire</a>
+</nav>
+
+
+<div style="text-align: center; margin-top: 50px;">
+    <h1>OUPS ERREUR!</h1>
+    <img src="/img/alien___h_r__giger_pitch___by_adonihs-d2xjobm.jpg" alt="Error Image" style="width: 400px; height: 400px;"><img
+        />
+
+    <p th:text="${errorMessage}"></p>
+
+
+</div>
+</body>
+</html>
+<style>
+
+    body {
+        font-family: 'Raleway', sans-serif;
+    }
+
+    h1, h2, h3, label, button {
+        font-family: 'Raleway', sans-serif;
+    }
+
+
+    header {
+        background-color: #333;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 58px;
+    }
+
+    .user-info {
+        text-align: right;
+        font-size: small;
+    }
+
+    /* Navbar Styles */
+    nav {
+        display: flex;
+        justify-content: center;
+        background-color: #555; /* Couleur de fond de la barre de navigation */
+        padding: 30px; /* Espacement intérieur de la barre de navigation */
+    }
+
+    nav a {
+        color: lightskyblue; /* Couleur du texte de la barre de navigation */
+        text-decoration: none;
+        margin: 0 5px;
+        display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+        padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+        font-size: 16px; /* Changer la taille du texte */
+        border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+        border-radius: 15px;
+    }
+
+    nav a:hover {
+        text-decoration: underline; /* Soulignement du texte au survol */
+    }
+
+
+    /* Navbar Styles */
+    nav {
+        display: flex;
+        justify-content: center;
+        background-color: #555; /* Couleur de fond de la barre de navigation */
+        padding: 30px; /* Espacement intérieur de la barre de navigation */
+    }
+
+    nav a {
+        color: lightskyblue; /* Couleur du texte de la barre de navigation */
+        text-decoration: none;
+        margin: 0 5px;
+        display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+        padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+        font-size: 16px; /* Changer la taille du texte */
+        border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+        border-radius: 15px;
+    }
+
+    nav a:hover {
+        text-decoration: underline; /* Soulignement du texte au survol */
+    }
+
+    .button {
+        color: lightskyblue; /* Couleur du texte de la barre de navigation */
+        text-decoration: none;
+        margin: 0 5px;
+        /*display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+        padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+        font-size: 16px; /* Changer la taille du texte */
+        border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+        border-radius: 15px;
+    }
+
+    body {
+        background-color: darkgrey;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+</style>

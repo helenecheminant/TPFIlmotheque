@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway&display=swap">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width"/>
+    <title>Film Detail</title>
+</head>
+<body>
+
+<header>
+    <h1>La filmothèque</h1>
+
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+        <div class="button"><a th:href="@{/login}">Se connecter </a></div>
+    </div>
+    <div class="user-info" th:if="${#authorization.expression('isAuthenticated()')}">
+        Vous êtes connecté en tant que <span th:text="${#authentication.name}"></span>
+        <div class="button"><a th:href="@{/logout}">Se déconnecter</a></div>
+    </div>
+</header>
+
+<nav>
+    <a href="/catalogFilms">Acceuil</a>
+    <a sec:authorize="isAuthenticated()" href="/nouveauFilmForm">Ajouter un film</a>
+    <a href="/inscription">S'inscrire</a>
+</nav>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+
+<div>
+    <h2 th:text="${film.titre}"> Titre du film </h2>
+    <div class="main-container">
+
+        <div class="text-column">
+            <h3 th:text="${'Genre : ' + film.genre.libelle}"></h3>
+            <p th:text="${'Durée : ' + film.duree + ' minutes'}"></p>
+            <p th:text="${'Sorti en ' + film.annee_sortie}">année</p>
+            <p th:text="${'Réalisateur : ' + film.getRealisateur().nom+ ' '+ film.getRealisateur().prenom}">année</p>
+
+
+            <h3>Acteurs:</h3>
+            <ul>
+                <li th:each="participant : ${film.getActeurs()}">
+                    <span th:text="${participant.prenom+ ' ' + participant.nom }"></span></li>
+            </ul>
+
+            <h3>Synopsis :</h3>
+            <p th:text="${film.synopsis}">Synopsis</p>
+        </div>
+
+        <div class="image-column">
+                  <img  th:src="@{'https://picsum.photos/200/300?random=' + ${film.id}}" alt="Film Image"></img>
+        </div>
+
+        <div class="avis-section">
+            <h3>Avis des utilisateurs </h3>
+
+            <p th:text="${#lists.isEmpty(avisList) ? 'Aucun avis pour ce film' : avisList.size() + ' avis '}"></p>
+            <div th:each="unAvis : ${avisList}">
+                <div class="avis">
+                    <p><strong th:text="${unAvis.user.pseudo + ' a écrit  :'}">Nom Utilisateur</strong></p>
+                    <p><em th:text="${ unAvis.commentaire }">Avis...</em></p>
+                    <p th:text="${' Note attribuée au film : ' + unAvis.note + ' /10'}">note de l'avis</p>
+                </div>
+            </div>
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/nouveauAvisForm/film/{id}(id=${film.id})}">Ajouter un avis</a></div>
+
+    </div>
+</div>
+</div>
+
+</body>
+</html>
+
+
+<style>
+
+    body {
+        font-family: 'Raleway', sans-serif;
+    }
+
+    h1, h2, h3, label, button {
+        font-family: 'Raleway', sans-serif;
+    }
+
+
+    header {
+        background-color: #333;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 58px;
+    }
+
+    .user-info {
+        text-align: right;
+        font-size: small;
+    }
+
+    /* Navbar Styles */
+    nav {
+        display: flex;
+        justify-content: center;
+        background-color: #555; /* Couleur de fond de la barre de navigation */
+        padding: 30px; /* Espacement intérieur de la barre de navigation */
+    }
+
+    nav a {
+        color: lightskyblue; /* Couleur du texte de la barre de navigation */
+        text-decoration: none;
+        margin: 0 5px;
+        display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+        padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+        font-size: 16px; /* Changer la taille du texte */
+        border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+        border-radius: 15px;
+    }
+
+    nav a:hover {
+        text-decoration: underline; /* Soulignement du texte au survol */
+    }
+
+
+    /* Navbar Styles */
+    nav {
+        display: flex;
+        justify-content: center;
+        background-color: #555; /* Couleur de fond de la barre de navigation */
+        padding: 30px; /* Espacement intérieur de la barre de navigation */
+    }
+
+    nav a {
+        color: lightskyblue; /* Couleur du texte de la barre de navigation */
+        text-decoration: none;
+        margin: 0 5px;
+        display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+        padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+        font-size: 16px; /* Changer la taille du texte */
+        border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+        border-radius: 15px;
+    }
+
+    nav a:hover {
+        text-decoration: underline; /* Soulignement du texte au survol */
+    }
+
+    .button {
+        color: lightskyblue; /* Couleur du texte de la barre de navigation */
+        text-decoration: none;
+        margin: 0 5px;
+        /*display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+        padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+        font-size: 16px; /* Changer la taille du texte */
+        border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+        border-radius: 15px;
+    }
+
+    body {
+        background-color: #222222;
+        color: bisque;
+        font: 1.0em / 1.5 Helvetica Neue, Helvetica, Arial, sans-serif;
+        padding: 10px; /* Augmentez l'espacement pour plus de visibilité */
+        margin: 10px;
+    }
+
+    .main-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: 1000px;
+        border-radius: 15px;
+        margin: 70px;
+    }
+
+    .text-column {
+        width: 50%; /* Ajustez la largeur de la colonne de texte selon vos besoins */
+    }
+
+    .image-column {
+        width: 50%;
+    }
+
+    .image-column img {
+        max-width: 100%;
+        height: 300px;
+        display: block;
+        margin: 10px;
+    }
+
+
+    .avis-section {
+        margin-top: 20px; /* Espace entre les colonnes et la section d'avis */
+        border: 1px solid #ddd; /* Bordure pour la section d'avis */
+        border-radius: 15px;
+        padding: 10px;
+        width: 60%;
+        box-sizing: border-box;
+    }
+
+    .avis {
+        margin-bottom: 10px; /* Espace entre les avis */
+        border-bottom: 1px solid #ddd; /* Bordure entre les avis */
+        padding-bottom: 10px;
+    }
+</style>
+

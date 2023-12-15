@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway&display=swap">
+    <meta charset="UTF-8">
+    <title>Ajouter avis</title>
+</head>
+<body>
+<header>
+    <h1>La filmothèque</h1>
+
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+        <div class="button"><a th:href="@{/login}">Se connecter </a></div>
+    </div>
+    <div class="user-info" th:if="${#authorization.expression('isAuthenticated()')}">
+        Vous êtes connecté en tant que <span th:text="${#authentication.name}"></span>
+        <div class="button"><a th:href="@{/logout}">Se déconnecter</a></div>
+    </div>
+</header>
+
+
+<nav>
+    <a href="/catalogFilms">Acceuil</a>
+    <a sec:authorize="isAuthenticated()" href="/nouveauFilmForm">Ajouter un film</a>
+    <a href="/inscription">S'inscrire</a>
+</nav>
+
+
+<div sec:authorize="hasRole('ROLE_USER')">
+
+</div>
+
+
+<form th:action="@{/nouveauAvisForm/film/{id}(id=${filmId})}" th:object="${avis}" method="post">
+
+
+    <!-- Afficher erreur générique -->
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+        <p>OUPS ! Une erreur s'est produite lors de la soumission du formulaire.</p>
+        <ul>
+            <li th:each="fieldError : ${errors}" th:text="${fieldError.defaultMessage}"></li>
+        </ul>
+    </div>
+
+    <h2>Ajouter un avis</h2>
+
+    <!-- Affichage du nom d'utilisateur -->
+    <div>
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" id="username" name="username" th:value="${#authentication.name}" readonly="readonly" />
+
+
+
+    <!-- Note -->
+    <label for="note">Note:</label>
+    <input type="number" id="note" th:field="*{note}" name="note" required>
+    <br>
+
+    <!-- avis -->
+    <label for="commentaire">Avis :</label>
+    <textarea id="commentaire" th:field="*{commentaire}" required></textarea>
+
+
+
+    <!-- Bouton de soumission -->
+    <input type="submit" value="Publier">
+</form>
+
+</body>
+</html>
+
+
+
+<style>
+
+body {
+font-family: 'Raleway', sans-serif;
+}
+
+h1, h2, h3, label, button {
+font-family: 'Raleway', sans-serif;
+}
+
+
+header {
+background-color: #333;
+color: #fff;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px;
+}
+
+header h1 {
+font-size: 58px;
+}
+
+.user-info {
+text-align: right;
+font-size: small;
+}
+
+/* Navbar Styles */
+nav {
+display: flex;
+justify-content: center;
+background-color: #555; /* Couleur de fond de la barre de navigation */
+padding: 30px; /* Espacement intérieur de la barre de navigation */
+}
+
+nav a {
+color: lightskyblue; /* Couleur du texte de la barre de navigation */
+text-decoration: none;
+margin: 0 5px;
+display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+font-size: 16px; /* Changer la taille du texte */
+border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+border-radius: 15px;
+}
+
+nav a:hover {
+text-decoration: underline; /* Soulignement du texte au survol */
+}
+
+
+/* Navbar Styles */
+nav {
+display: flex;
+justify-content: center;
+background-color: #555; /* Couleur de fond de la barre de navigation */
+padding: 30px; /* Espacement intérieur de la barre de navigation */
+}
+
+nav a {
+color: lightskyblue; /* Couleur du texte de la barre de navigation */
+text-decoration: none;
+margin: 0 5px;
+display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+font-size: 16px; /* Changer la taille du texte */
+border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+border-radius: 15px;
+}
+
+nav a:hover {
+text-decoration: underline; /* Soulignement du texte au survol */
+}
+
+.button {
+color: lightskyblue; /* Couleur du texte de la barre de navigation */
+text-decoration: none;
+margin: 0 5px;
+/*display: inline-block; /* Afficher les liens comme des blocs en ligne pour les traiter comme des boutons */
+padding: 10px 15px; /* Ajouter un espace à l'intérieur du bouton */
+font-size: 16px; /* Changer la taille du texte */
+border: 1px solid lightskyblue; /* Ajouter une bordure autour du bouton */
+border-radius: 15px;
+}
+
+body {
+    background-color: darkgrey;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: cornflowerblue;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+label {
+    display: block;
+    margin: 10px 0;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+</style>
